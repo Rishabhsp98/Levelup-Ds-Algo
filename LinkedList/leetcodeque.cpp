@@ -12,6 +12,14 @@ public:
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 };
 
+struct ListNode
+{
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
 // leetcode 94 ,144,145  passed 4ms,4ms,0ms(just change the order of selfdone) According to LNR,NLR,LRN
 class tpair
 {
@@ -137,6 +145,139 @@ TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder)
     return constructTree(preorder, psi, pei, inorder, isi, iei);
 }
 
+// leetcode reverse nodes in K groups  25 =======================================LINKED LIST  IMP TECHNIQUE
+ListNode *th = nullptr;
+ListNode *tt = nullptr;
+
+ListNode *oh = nullptr;
+ListNode *ot = nullptr;
+void addfirst(ListNode *node)
+{
+    if (th == nullptr)
+    {
+        th = node;
+        tt = node;
+    }
+    else
+    {
+        node->next = th;
+        th = node;
+    }
+}
+int length(ListNode *head)
+{
+    int count = 0;
+    while (head != nullptr)
+    {
+        count++;
+        head = head->next;
+    }
+    return count;
+}
+ListNode *reverseKGroup(ListNode *head, int k)
+{
+
+    if (head == nullptr || head->next == nullptr || k == 0 || k == 1)
+        return head;
+
+    int len = length(head);
+    if (len < k)
+        return head;
+    ListNode *curr = head;
+    while (curr != nullptr)
+    {
+        int count = k;
+
+        //Reversing happens of group size of k
+        while (count--)
+        {
+            ListNode *next = curr->next;
+            curr->next = nullptr;
+            addfirst(curr);
+            curr = next;
+        }
+        /*after reversing len decremented by k to the amount still left to be reversed
+            such as len=5,k=2 then len=5-2->3so after that len=3 ,the len=1 it will come out of loop 
+            see last check of len < k  */
+        len -= k;
+
+        // First if condition will run when first group comes after reversing otherwise else
+        if (ot == nullptr)
+        {
+            oh = th;
+            ot = tt;
+        }
+        else
+        {
+            ot->next = th;
+            ot = tt;
+        }
+
+        // Again making temp head and temp tail nullptr as it will use again in reversing next group
+        th = nullptr;
+        tt = nullptr;
+
+        if (len < k)
+        {
+            ot->next = curr;
+            curr = nullptr;
+        }
+    }
+    return oh;
+}
+
+// LeetCode 92 reverse in between m to n   (Passed with 0ms using fast io)
+ListNode *th = nullptr;
+ListNode *tt = nullptr;
+void addfirst(ListNode *node)
+{
+    if (th == nullptr)
+    {
+        th = node;
+        tt = node;
+    }
+    else
+    {
+        node->next = th;
+        th = node;
+    }
+}
+ListNode *reverseBetween(ListNode *head, int m, int n)
+{
+    if (head == nullptr || head->next == nullptr || m == n)
+        return head;
+
+    int idx = 1;
+    ListNode *curr = head, *orghead = head, *prev = nullptr;
+    while (curr != nullptr)
+    {
+        while (idx >= m && idx <= n)
+        {
+            ListNode *next = curr->next;
+            curr->next = nullptr;
+            addfirst(curr);
+            curr = next;
+            idx++;
+        }
+
+        if (tt != nullptr)
+        {
+            tt->next = curr;
+            if (prev != nullptr)
+                prev->next = th;
+            else
+                orghead = th;
+
+            break;
+        }
+
+        prev = curr;
+        curr = curr->next;
+        idx++;
+    }
+
+    return orghead;
+}
 int main()
 {
     return 0;
