@@ -20,7 +20,6 @@ int CoinchangPermu_Inf(vector<int> &nums, int target, string ans)
     }
     return count;
 }
-
 //just move forward always so use nums[idx] and start next call from idx to nums.size()
 int CoinchangeCombina_Inf(vector<int> &nums, int target, int idx, string ans)
 {
@@ -80,6 +79,7 @@ int CoinchangePermu_Single(vector<int> &nums, int target, string ans)
     }
     return count;
 }
+
 void CoinchangeMain()
 {
     vector<int> arr{2, 3, 5, 7};
