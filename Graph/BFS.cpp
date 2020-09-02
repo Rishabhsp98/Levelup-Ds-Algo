@@ -165,6 +165,56 @@ int orangesRotting(vector<vector<int>> &grid)
     return level == 0 ? 0 : level - 1;
 }
 
+//Important Bipartite graph
+
+bool isbipar(int src, vector<vector<int>> &graph, vector<int> &vis)
+{
+    queue<pair<int, int>> que;
+    que.push({src, 0}); /* 0->red 
+                                1->green   Just enter the colour as (colour +1)  % 2   
+                                 1 % 2=1 and 2 % 2 =0*/
+
+    // int cycle=0;
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size--)
+        {
+            pair<int, int> rvtx = que.front();
+            que.pop();
+
+            if (vis[rvtx.first] != -1) //Cycle occurs
+            {
+                if (vis[rvtx.first] != rvtx.second) //Now if that vertex has been coloured with other colour
+                    return false;
+            }
+            vis[rvtx.first] = rvtx.second;
+
+            for (int x : graph[rvtx.first])
+            {
+                if (vis[x] == -1)
+                    que.push({x, (rvtx.second + 1) % 2});
+            }
+        }
+    }
+    return true;
+}
+bool isBipartite(vector<vector<int>> &graph)
+{
+    int n = graph.size();
+    vector<int> vis(n, -1);
+
+    for (int i = 0; i < n; i++)
+    {
+        if (vis[i] == -1)
+        {
+            if (isbipar(i, graph, vis) == false)
+                return false;
+        }
+    }
+    return true;
+}
 int main()
 {
 
